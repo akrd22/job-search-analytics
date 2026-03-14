@@ -1,15 +1,32 @@
-Welcome to your new dbt project!
+# Job Search Analytics
 
-### Using the starter project
+A data engineering project that tracks and analyzes my job search activity using **dbt** and **PostgreSQL**.
 
-Try running the following commands:
-- dbt run
-- dbt test
+## Project Structure
+seeds/ > raw job application data(CSV)
+models/
+staging/ > Cleaned and standardized data 
+marts/ > Analytics-ready models
 
 
-### Resources:
-- Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
-- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
-- Join the [chat](https://community.getdbt.com/) on Slack for live discussions and support
-- Find [dbt events](https://events.getdbt.com) near you
-- Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
+## Tech Stack
+- **dbt** — data transformation
+- **PostgreSQL** — data warehouse
+- **WSL** — development environment
+- **Git/GitHub** — version control
+
+## Key Insights
+- 30 job applications tracked
+- 74% no response rate
+- 93% of applications via LinkedIn
+- 0 interviews — diversifying sources!
+
+## Models
+| Model | Type | Description |
+|---|---|---|
+| `stg_job_applications` | View | Cleaned raw data |
+| `fct_job_applications` | View | Analytics-ready with derived columns |
+| `agg_applications_by_status` | View | Applications grouped by status |
+| `agg_applications_by_source` | View | Applications grouped by source |
+| `agg_weekly_applications` | View | Weekly application activity |
+
