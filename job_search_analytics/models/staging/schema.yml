@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: stg_job_applications
+    description: "Cleaned and standardized job applications"
+    columns:
+      - name: application_id
+        description: "Primary key"
+        tests:
+          - unique
+          - not_null
+      - name: status
+        description: "Application status"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['rejected', 'no_response', 'interview', 'offer', 'phone screen']
+      - name: source
+        tests:
+          - not_null

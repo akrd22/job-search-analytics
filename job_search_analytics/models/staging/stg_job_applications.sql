@@ -1,0 +1,25 @@
+with source as (
+    select * from {{ ref('job_applications') }}
+),
+
+cleaned as (
+    select
+        application_id,
+        trim(company_name) as company_name,
+        lower(trim(job_title)) as job_title,
+        to_date(application_date::text, 'DD-Mon-YYYY') as application_date,
+        case
+            when lower(trim(status)) in ('n/a', 'na', '') then 'no_response'
+            when lower(trim(status)) = 'rjected' then 'rejected'
+            else lower(trim(status))
+        end as status,
+        coalesce(lower(trim(source)), 'unknown') as source,
+        trim(location) as location,
+        lower(trim(work_type)) as work_type,
+        nullif(regexp_replace(salary_min::text, '[$,]', '', 'g'), '')::integer as salary_min,
+        nullif(regexp_replace(salary_max::text, '[$,]', '', 'g'), '')::integer as salary_max,
+        notes
+    from source
+)
+
+select * from cleaned

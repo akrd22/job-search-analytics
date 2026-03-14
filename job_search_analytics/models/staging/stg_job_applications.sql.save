@@ -1,0 +1,43 @@
+with source as (
+    select * from {{ ref('job_applications') }}
+),
+
+cleaned as (
+    select
+        application_id,
+        
+        -- clean company name: trim whitespace
+        trim(company_name) as company_name,
+        
+        -- clean job title: trim whitespace, lowercase
+        lower(trim(job_title)) as job_title,
+        
+        -- standardize date format
+        to_date(application_date::text, 'DD-Mon-YYYY') as application_date,
+        
+        -- fix typos in status, standardize to lowercase
+        case
+            when lower(trim(status)) in ('n/a', 'na', '') then 'no_response'
+            when lower(trim(status)) = 'rjected' then 'rejected'
+            else lower(trim(status))
+        end as status,
+        
+        -- standardize source to lowercase
+        lower(trim(source)) as source,
+        
+        -- clean location
+        trim(location) as location,
+        
+        -- standardize work_type to lowercase
+        lower(trim(work_type)) as work_type,
+        
+        -- clean salary: remove $ and commas, cast to integer
+        nullif(regexp_replace(salary_min::text, '[$,]', '', 'g'), '')::integer as salary_min,
+        nullif(regexp_replace(salary_max::text, '[$,]', '', 'g'), '')::integer as salary_max,
+        
+        notes
+
+    from source
+)
+
+select * from cleaned
